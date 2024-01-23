@@ -1,0 +1,85 @@
+CREATE DATABASE Library;
+USE Library;
+
+CREATE TABLE readers (
+    reader_id VARCHAR(20),
+    fname VARCHAR(20),
+    mname VARCHAR(20),
+    lname VARCHAR(20),
+    city VARCHAR(20),
+    mobileno VARCHAR(15),
+    occupation VARCHAR(50),
+    DOB DATE,
+    CONSTRAINT reader_pk PRIMARY KEY(reader_id)
+);
+
+INSERT INTO readers VALUES ('LABID123A', 'Aarav', 'Vikram', 'Sharma', 'Chandrapur', '9923456789', 'Software Engineer', '1992-03-15');
+INSERT INTO readers VALUES('LABID456B', 'Anika', null, 'Patel', 'Surayapur', '9078123456', 'Pediatrician', '1985-11-07');
+INSERT INTO readers VALUES('LABID789C', 'Arjun', null, 'Kapoor', 'Rajnagar', '8210987654', 'Architect', '1990-06-22');
+INSERT INTO readers VALUES('LABID234D', 'Priya', null, 'Khanna', 'Keralapuri', '7045678901', 'Graphic Designer', '1998-04-10');
+INSERT INTO readers VALUES('LABID567E', 'Rohan', 'Suresh', 'Singh', 'Indrapur', '9001234567', 'Financial Analyst', '1993-09-05');
+INSERT INTO readers VALUES('LABID890F', 'Naina', 'Deepak', 'Verma', 'Varanasi', '7054321098', 'Environmental Scientist', '1987-01-20');
+INSERT INTO readers VALUES('LABID123G', 'Arnav', 'Prakash', 'Joshi', 'Jodhpur', '8209876543', 'Civil Engineer', '1995-10-12');
+INSERT INTO readers VALUES('LABID456H', 'Diya', 'Anjali', 'Saha', 'Suryanagari', '9976543210', 'Marketing Manager', '1998-08-03');
+INSERT INTO readers VALUES('LABID789I', 'Siddharth', 'Kumar', 'Reddy', 'Vishakhapatnam', '7012345678', 'Aerospace Engineer', '1984-12-18');
+INSERT INTO readers VALUES('LABID234J', 'Aisha', 'Sanjana', 'Menon', 'Malabar City', '9087654321', 'Journalist', '1990-02-08');
+
+CREATE TABLE book (
+    bid VARCHAR(6),
+    bname VARCHAR(40),
+    bdomain VARCHAR(30),
+    CONSTRAINT book_bid_pk PRIMARY KEY(bid)
+);
+
+INSERT INTO book VALUES ('BID123', 'The Enigma Code', 'Mystery');
+INSERT INTO book VALUES('BID234', 'Echoes of Eternity', 'Fantasy');
+INSERT INTO book VALUES('BID345', 'Quantum Realms', 'Science Fiction');
+
+CREATE TABLE active_readers (
+    account_id VARCHAR(6),
+    reader_id VARCHAR(20),
+    bid VARCHAR(6),
+    atype VARCHAR(10),
+    astatus VARCHAR(10),
+    CONSTRAINT activereaders_acnumber_pk PRIMARY KEY(account_id),
+    CONSTRAINT account_readerid_fk FOREIGN KEY(reader_id) REFERENCES readers(reader_id),
+    CONSTRAINT account_bid_fk FOREIGN KEY(bid) REFERENCES book(bid)
+);
+
+INSERT INTO active_readers VALUES ('ACC001', 'LABID123A', 'BID345', 'Premium', 'Terminated');
+INSERT INTO active_readers VALUES('ACC002', 'LABID456B', 'BID234', 'Premium', 'Active');
+INSERT INTO active_readers VALUES('ACC003', 'LABID789C', 'BID123', 'Regular', 'Suspended');
+INSERT INTO active_readers VALUES('ACC004', 'LABID234D', 'BID234', 'Premium', 'Active');
+INSERT INTO active_readers VALUES('ACC005', 'LABID567E', 'BID345', 'Regular', 'Terminated');
+INSERT INTO active_readers VALUES('ACC006', 'LABID890F', 'BID123', 'Premium', 'Active');
+INSERT INTO active_readers VALUES('ACC007', 'LABID123G', 'BID234', 'Regular', 'Suspended');
+INSERT INTO active_readers VALUES('ACC008', 'LABID456H', 'BID345', 'Premium', 'Active');
+INSERT INTO active_readers VALUES('ACC009', 'LABID789I', 'BID123', 'Regular', 'Active');
+INSERT INTO active_readers VALUES('ACC010', 'LABID234J', 'BID234', 'Premium', 'Terminated');
+
+CREATE TABLE bookissue_details (
+    issuenumber INT(6),
+    account_id VARCHAR(6),
+    bid VARCHAR(6),
+    bookname VARCHAR(50),
+    number_of_books_issued INT(7),
+    CONSTRAINT trandetails_tnumber_pk PRIMARY KEY(issuenumber),
+    CONSTRAINT trandetails_acnumber_fk FOREIGN KEY(account_id) REFERENCES active_readers(account_id)
+);
+
+INSERT INTO bookissue_details VALUES (101, 'ACC001', 'BID123', 'The Enchanted Forest', 2);
+INSERT INTO bookissue_details VALUES (102, 'ACC002', 'BID234', 'Beyond the Horizon', 1);
+INSERT INTO bookissue_details VALUES (103, 'ACC003', 'BID345', 'Quantum Leap', 3);
+INSERT INTO bookissue_details VALUES (104, 'ACC004', 'BID234', 'Digital Dreams', 1);
+INSERT INTO bookissue_details VALUES (105, 'ACC005', 'BID345', 'The Lost City', 2);
+INSERT INTO bookissue_details VALUES (106, 'ACC006', 'BID123', 'Astro Adventures', 1);
+INSERT INTO bookissue_details VALUES (107, 'ACC007', 'BID234', 'Starlight Serenade', 2);
+INSERT INTO bookissue_details VALUES (108, 'ACC008', 'BID345', 'Marketing Mastery', 1);
+INSERT INTO bookissue_details VALUES (109, 'ACC009', 'BID123', 'Skyward Bound', 3);
+INSERT INTO bookissue_details VALUES (110, 'ACC010', 'BID234', 'Journalism Essentials', 1);
+
+-- We can now run SELECT queries as we needed --
+SELECT * FROM active_readers;
+SELECT * FROM active_readers WHERE astatus='Terminated';
+SELECT * FROM active_readers WHERE astatus='Active';
+SELECT * FROM active_readers WHERE astatus='Suspended';
